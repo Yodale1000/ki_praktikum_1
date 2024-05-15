@@ -181,7 +181,7 @@ if __name__ == "__main__":
     # best known solution for berlin52 = 7542
     tsp = tsplib95.load('problems/berlin52.tsp')
     
-    output_file = 'Euklidische Distanzen Berlin 52.xlsx'
+    output_file = 'TSP_Solution_Lengths.xlsx'
 
     tsp_map = []
     generate_tsp_map()
