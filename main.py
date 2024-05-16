@@ -2,8 +2,12 @@ import random
 
 import tsplib95
 
-population_size = 1000
-nr_of_generations = 2000
+#import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+population_size = 100
+nr_of_generations = 200
 
 # (mu) percentage of parents selected
 survival_ratio = 0.25
@@ -12,6 +16,12 @@ survival_ratio = 0.25
 reproduction_type_ratio = 0.3
 
 mutation_probability = 0.1
+
+#df=pd.read_excel('problems/berlin52.xlsx', index_col=None, header=None)    #   <----------- here distance matrix input
+#adjacency_mat=df.values.tolist()
+#distance_matrix=np.asarray(adjacency_mat)
+    
+best_fitness_values = []
 
 
 def generate_tsp_map():
@@ -58,6 +68,7 @@ def find_best_individual(population):
     for individual in population:
         if individual.cost < best_individual.cost:
             best_individual = individual
+    best_fitness_values.append(best_individual.cost)
     return best_individual
 
 
@@ -169,8 +180,22 @@ if __name__ == "__main__":
     # tsp = tsplib95.load('problems/att48.tsp')
     # best known solution for berlin52 = 7542
     tsp = tsplib95.load('problems/berlin52.tsp')
+    
+    output_file = 'TSP_Solution_Lengths.xlsx'
+
     tsp_map = []
     generate_tsp_map()
     number_of_cities = len(tsp_map)
     solution = run_evolutionary_algorithm()
     print("Best solution found has length: " + str(solution.cost) + ", solution: " + str(solution.gene))
+    
+    
+    if output_file:
+        df_output = pd.DataFrame({'Population': range(len(best_fitness_values)), 'Fitness': best_fitness_values})
+        df_output.to_excel(output_file, index=False)
+
+    plt.plot(best_fitness_values)
+    plt.xlabel("Population")
+    plt.ylabel("Fitness")
+    plt.title("Convergence Plot")
+    plt.show()
